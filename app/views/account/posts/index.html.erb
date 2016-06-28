@@ -1,0 +1,27 @@
+<div class="span12">
+	<table class="table">
+		<thead>
+			<tr>
+				<td>#</td>
+				<td>Feature</td>
+				<td>Content</td>
+				<td>Group Name</td>
+				<td>Last Update</td>
+			</tr>
+		</thead>
+		<tbody>
+			<% @posts.each do |post| %>
+			<tr>
+				<td><%= post.id %></td>
+				<td><%= image_tag(post.image_url(:thumb).to_s, size: "100") %></td>
+				<td><p><%= render_post_content(post) %></p></td>
+				<td><%= render_post_group_title(post) %></td>
+				<td><%= post.updated_at.to_s(:long) %></td>
+				<td><%= link_to("Edit", edit_group_post_path(post.group, post), :class => "btn btn-mini")%></td>
+				<td><%= link_to("Delete", group_post_path(post.group, post), :class => "btn btn-mini", method: :delete, data: { confirm: 'Are you sure?' })%></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+</div>

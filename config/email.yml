@@ -1,0 +1,19 @@
+development:
+    api_key: <%= ENV["MAILGUN_API_KEY"] %>
+    domain: <%= ENV["MAILGUN_DOMAIN"] %>
+    user_name: <%= ENV["MAILGUN_SMTP_LOGIN"] %>
+    password: <%= ENV["MAILGUN_SMTP_PASSWORD"] %>
+    port: <%= ENV["MAILGUN_SMTP_PORT"] %>
+    address: <%= ENV["MAILGUN_SMTP_SERVER"] %>
+    authentication: 'plain'
+    enable_starttls_auto: true
+    
+production:
+    api_key: <%= ENV["MAILGUN_API_KEY"] %>
+    domain: <%= ENV["MAILGUN_DOMAIN"] %>
+    user_name: <%= ENV["MAILGUN_SMTP_LOGIN"] %>
+    password: <%= ENV["MAILGUN_SMTP_PASSWORD"] %>
+    port: <%= ENV["MAILGUN_SMTP_PORT"] %>
+    address: <%= ENV["MAILGUN_SMTP_SERVER"] %>
+    authentication: 'plain'
+    enable_starttls_auto: true

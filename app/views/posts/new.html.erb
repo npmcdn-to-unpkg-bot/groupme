@@ -1,0 +1,15 @@
+<h1>New Post</h1>
+
+<div class="span12">
+
+	<%= simple_form_for [@group, @post] do |f| %>
+		<%= f.text_field :content, :autofocus => true, :input_html => { :class => "input-xxlarge" } %>
+		<%= f.file_field :image %>
+		
+		<div class="form-actions">
+			<%= f.submit "Submit", :disable_with => "Submiting.....", :class => "btn btn-primary" %>
+		</div>
+		
+	<% end %>
+	
+</div>

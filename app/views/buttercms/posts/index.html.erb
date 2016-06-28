@@ -1,0 +1,44 @@
+<h2>Posts</h2>
+<div class="span12">
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<td>Featured image</td>
+				<td>Post title</td>
+				<td>Post author</td>
+				<td>Post summary</td>
+				<td>Post categories</td>
+			</tr>
+		</thead>
+		<tbody>
+		<!-- List of posts -->
+			<% @posts.each do |post| %>
+
+			<tr>
+				<td><%= image_tag(post.featured_image, size: "100") if post.featured_image %></td>
+				<td><%= link_to post.title, buttercms_post_path(post.slug), :title => post.title %></td>
+				<td>by <%= link_to "#{post.author.first_name} #{post.author.last_name}", buttercms_author_path(post.author.slug) %></td>
+				<td><%= post.summary %></td>
+				<td>
+					<% post.categories.each do |category| %>
+						<%= link_to category.name, buttercms_category_path(category.slug), :title => category.name %>
+					<% end %>
+				</td>
+			</tr>
+		
+			<% end %>
+		</tbody>
+	</table>
+
+	<!-- Pagination links -->
+	<div>
+	  <% if @previous_page %>
+		<%= link_to "Prev", buttercms_blog_path(:page => @previous_page) %>
+	  <% end %>
+
+	  <% if @next_page %>
+		<%= link_to "Next", buttercms_blog_path(:page => @next_page) %>
+	  <% end %>
+	</div>
+
+</div>

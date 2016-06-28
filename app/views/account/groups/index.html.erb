@@ -1,0 +1,27 @@
+<div class="span12">
+	<h2>My Groups</h2>
+	<table class="table">
+		<thead>
+			<tr>
+				<td>#</td>
+				<td>Title</td>
+				<td>Description</td>
+				<td>Post Count</td>
+				<td>Last Update</td>
+			</tr>
+		</thead>
+		<tbody>
+			<% @groups.each do |group| %>
+			<tr>
+				<td><%= group.id %></td>
+				<td><%= image_tag(group.image_url(:thumb).to_s, size: "100") %></td>
+				<td><%= link_to(render_group_title(group), group_path(group))%></td>
+				<td><%= render_group_description(group) %></td>
+				<td><%= group.posts.size %></td>
+				<td><%= group.updated_at.to_s(:long) %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+</div>

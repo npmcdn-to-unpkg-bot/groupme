@@ -1,0 +1,1616 @@
+  [1m[36m (3.7ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (3.4ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to DeviseCreateUsers (20160611021452)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (2.1ms)[0m  CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" datetime, "last_sign_in_at" datetime, "current_sign_in_ip" varchar, "last_sign_in_ip" varchar, "confirmation_token" varchar, "confirmed_at" datetime, "confirmation_sent_at" datetime, "unconfirmed_email" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36m (0.6ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+
+  [1m[36m (0.3ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.2ms)[0m  CREATE UNIQUE INDEX "index_users_on_confirmation_token" ON "users" ("confirmation_token")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611021452"]]
+  [1m[35m (1.6ms)[0m  commit transaction
+Migrating to AddFbIdToUser (20160611021458)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "users" ADD "fb_id" varchar(20)
+  [1m[36m (0.5ms)[0m  [1mALTER TABLE "users" ADD "token" varchar[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "users" ADD "name" varchar
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611021458"]]
+  [1m[35m (6.9ms)[0m  commit transaction
+Migrating to CreateGroups (20160611021951)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  CREATE TABLE "groups" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "description" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611021951"]]
+  [1m[35m (1.1ms)[0m  commit transaction
+Migrating to CreatePosts (20160611054219)
+  [1m[36m (0.2ms)[0m  [1mbegin transaction[0m
+  [1m[35m (2.6ms)[0m  CREATE TABLE "posts" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "content" text, "group_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611054219"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+Migrating to AddUserIdToGroup (20160611081438)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "groups" ADD "user_id" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611081438"]]
+  [1m[35m (1.1ms)[0m  commit transaction
+Migrating to AddUserIdToPost (20160611083026)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  ALTER TABLE "posts" ADD "user_id" integer
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611083026"]]
+  [1m[35m (2.1ms)[0m  commit transaction
+Migrating to CreateGroupUsers (20160611085822)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (5.8ms)[0m  CREATE TABLE "group_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "group_id" integer, "user_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611085822"]]
+  [1m[35m (0.9ms)[0m  commit transaction
+Migrating to AddPostsCountToGroup (20160611103150)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "groups" ADD "posts_count" integer DEFAULT 0
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611103150"]]
+  [1m[35m (1.7ms)[0m  commit transaction
+Migrating to AddIsAdminToUser (20160611113949)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (1.8ms)[0m  ALTER TABLE "users" ADD "is_admin" boolean DEFAULT 'f'
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160611113949"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+Migrating to AddImageToPosts (20160612123829)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (1.5ms)[0m  ALTER TABLE "posts" ADD "image" varchar
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160612123829"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+Migrating to AddImageToGroups (20160612164700)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (7.5ms)[0m  ALTER TABLE "groups" ADD "image" varchar
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160612164700"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.2ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_confirmation_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_confirmation_token' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."email" = 'dpan.orz@gmail.com' LIMIT 1[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "users" ("name", "email", "encrypted_password", "is_admin", "created_at", "updated_at", "confirmation_token", "confirmation_sent_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)  [["name", "Dpan Admin"], ["email", "dpan.orz@gmail.com"], ["encrypted_password", "$2a$11$rJLb97wF6pSp.R6j6mQyT.X6o8C169DlUbiPedQqSIj3.pC8/CbN6"], ["is_admin", "t"], ["created_at", "2016-06-28 05:36:34.431654"], ["updated_at", "2016-06-28 05:36:34.431654"], ["confirmation_token", "xdsuSTWrhHd4ZSRZJGZa"], ["confirmation_sent_at", "2016-06-28 05:36:34.432082"]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  Rendered devise/mailer/confirmation_instructions.html.erb (5.5ms)
+
+Devise::Mailer#confirmation_instructions: processed outbound mail in 388.7ms
+
+Sent mail to dpan.orz@gmail.com (20.7ms)
+Date: Tue, 28 Jun 2016 13:36:34 +0800
+From: postmaster@ritw.mailgun.org
+Reply-To: postmaster@ritw.mailgun.org
+To: dpan.orz@gmail.com
+Message-ID: <57720ce2d4c49_3a973fd70143fa04643c8@MBP2010.local.mail>
+Subject: Confirmation instructions
+Mime-Version: 1.0
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<p>Welcome dpan.orz@gmail.com!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="http://groupme.dev/users/confirmation?confirmation_token=xdsuSTWrhHd4ZSRZJGZa">Confirm my account</a></p>
+
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (4.8ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第1組"], ["description", "這是用種子建立的第1個討論版\n\n這是用種子建立的第1個討論版"], ["image", "group1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:35.394124"], ["updated_at", "2016-06-28 05:36:35.394124"]]
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 1], ["user_id", 1], ["created_at", "2016-06-28 05:36:35.514530"], ["updated_at", "2016-06-28 05:36:35.514530"]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 1], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:37.142098"], ["updated_at", "2016-06-28 05:36:37.142098"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 1], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:38.288033"], ["updated_at", "2016-06-28 05:36:38.288033"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 1], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:39.330000"], ["updated_at", "2016-06-28 05:36:39.330000"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 1], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:40.143706"], ["updated_at", "2016-06-28 05:36:40.143706"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 1], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:41.115825"], ["updated_at", "2016-06-28 05:36:41.115825"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 1], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:42.193446"], ["updated_at", "2016-06-28 05:36:42.193446"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 1], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:43.179258"], ["updated_at", "2016-06-28 05:36:43.179258"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 1], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:44.169753"], ["updated_at", "2016-06-28 05:36:44.169753"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 1], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:45.249386"], ["updated_at", "2016-06-28 05:36:45.249386"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 1], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:46.664356"], ["updated_at", "2016-06-28 05:36:46.664356"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 1]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.8ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第2組"], ["description", "這是用種子建立的第2個討論版\n\n這是用種子建立的第2個討論版"], ["image", "group2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:47.813188"], ["updated_at", "2016-06-28 05:36:47.813188"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 2], ["user_id", 1], ["created_at", "2016-06-28 05:36:47.824403"], ["updated_at", "2016-06-28 05:36:47.824403"]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 2], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:48.980774"], ["updated_at", "2016-06-28 05:36:48.980774"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 2], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:49.953101"], ["updated_at", "2016-06-28 05:36:49.953101"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 2], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:50.946072"], ["updated_at", "2016-06-28 05:36:50.946072"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 2], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:51.722800"], ["updated_at", "2016-06-28 05:36:51.722800"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 2], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:52.731798"], ["updated_at", "2016-06-28 05:36:52.731798"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 2], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:53.731520"], ["updated_at", "2016-06-28 05:36:53.731520"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 2], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:54.733576"], ["updated_at", "2016-06-28 05:36:54.733576"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 2], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:55.703099"], ["updated_at", "2016-06-28 05:36:55.703099"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (3.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 2], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:57.257874"], ["updated_at", "2016-06-28 05:36:57.257874"]]
+  [1m[35mSQL (0.4ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 2], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:58.325978"], ["updated_at", "2016-06-28 05:36:58.325978"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 2]]
+  [1m[36m (3.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第3組"], ["description", "這是用種子建立的第3個討論版\n\n這是用種子建立的第3個討論版"], ["image", "group3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:36:59.525788"], ["updated_at", "2016-06-28 05:36:59.525788"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 3], ["user_id", 1], ["created_at", "2016-06-28 05:36:59.530203"], ["updated_at", "2016-06-28 05:36:59.530203"]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 3], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:00.775111"], ["updated_at", "2016-06-28 05:37:00.775111"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (4.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 3], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:01.955184"], ["updated_at", "2016-06-28 05:37:01.955184"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 3], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:02.920136"], ["updated_at", "2016-06-28 05:37:02.920136"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (5.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 3], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:05.102639"], ["updated_at", "2016-06-28 05:37:05.102639"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+
+
+Started GET "/" for ::1 at 2016-06-28 13:37:05 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.3ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  Rendered groups/index.html.erb within layouts/application (124.1ms)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-setting.css.scss to /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-setting.scss. (called from _app_views_layouts_application_html_erb__201360562924015081_70236112162280 at /Users/dpanaben/projectRoR/groupme/app/views/layouts/application.html.erb:10)
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 3], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:06.140162"], ["updated_at", "2016-06-28 05:37:06.140162"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (3.7ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 3], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:07.163162"], ["updated_at", "2016-06-28 05:37:07.163162"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-override.css.scss to /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-override.scss. (called from _app_views_layouts_application_html_erb__201360562924015081_70236112162280 at /Users/dpanaben/projectRoR/groupme/app/views/layouts/application.html.erb:10)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-setting.css.scss to /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-setting.scss. (called from _app_views_layouts_application_html_erb__201360562924015081_70236112162280 at /Users/dpanaben/projectRoR/groupme/app/views/layouts/application.html.erb:10)
+  [1m[36m (1.0ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 3], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:08.933374"], ["updated_at", "2016-06-28 05:37:08.933374"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-override.css.scss to /Users/dpanaben/projectRoR/groupme/app/assets/stylesheets/bootstrap-override.scss. (called from _app_views_layouts_application_html_erb__201360562924015081_70236112162280 at /Users/dpanaben/projectRoR/groupme/app/views/layouts/application.html.erb:10)
+  Rendered common/_search_form.html.erb (1.0ms)
+  Rendered common/_user_nav.html.erb (2.4ms)
+  Rendered common/_menu.html.erb (10.7ms)
+  Rendered common/_footer.html.erb (0.9ms)
+  Rendered common/_bootstrap_modal.html.erb (0.6ms)
+  Rendered common/_facebook_js.erb (0.8ms)
+  Rendered common/_google_analytics.html.erb (0.7ms)
+Completed 200 OK in 4886ms (Views: 4827.0ms | ActiveRecord: 1.7ms)
+  [1m[36m (4.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (4.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 3], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:10.456065"], ["updated_at", "2016-06-28 05:37:10.456065"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (47.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 3], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:11.912127"], ["updated_at", "2016-06-28 05:37:11.912127"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+  [1m[36m (4.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 3], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:13.027415"], ["updated_at", "2016-06-28 05:37:13.027415"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 3]]
+
+
+Started GET "/" for ::1 at 2016-06-28 13:37:13 +0800
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.3ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  Rendered groups/index.html.erb within layouts/application (16.1ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (0.6ms)
+  Rendered common/_menu.html.erb (5.8ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 178ms (Views: 176.2ms | ActiveRecord: 0.6ms)
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.9ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第4組"], ["description", "這是用種子建立的第4個討論版\n\n這是用種子建立的第4個討論版"], ["image", "group4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:14.302037"], ["updated_at", "2016-06-28 05:37:14.302037"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 4], ["user_id", 1], ["created_at", "2016-06-28 05:37:14.308481"], ["updated_at", "2016-06-28 05:37:14.308481"]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 4], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:15.601740"], ["updated_at", "2016-06-28 05:37:15.601740"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.3ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 4], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:16.633557"], ["updated_at", "2016-06-28 05:37:16.633557"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 4], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:17.797053"], ["updated_at", "2016-06-28 05:37:17.797053"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 4], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:18.995063"], ["updated_at", "2016-06-28 05:37:18.995063"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (5.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 4], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:20.112899"], ["updated_at", "2016-06-28 05:37:20.112899"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 4], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:21.073470"], ["updated_at", "2016-06-28 05:37:21.073470"]]
+  [1m[35mSQL (0.5ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 4], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:23.461530"], ["updated_at", "2016-06-28 05:37:23.461530"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 4], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:24.469816"], ["updated_at", "2016-06-28 05:37:24.469816"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+
+
+Started GET "/users/sign_in" for ::1 at 2016-06-28 13:37:25 +0800
+Processing by Devise::SessionsController#new as HTML
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb__2986794034646204588_70236107984080 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:6)
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb__2986794034646204588_70236107984080 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:7)
+  [1m[35m (0.8ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 4], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:25.570324"], ["updated_at", "2016-06-28 05:37:25.570324"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  Rendered devise/shared/_links.html.erb (59.1ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (181.3ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.5ms)
+  Rendered common/_menu.html.erb (6.6ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 344ms (Views: 339.5ms | ActiveRecord: 0.0ms)
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.3ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 4], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:26.742479"], ["updated_at", "2016-06-28 05:37:26.742479"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 4]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第5組"], ["description", "這是用種子建立的第5個討論版\n\n這是用種子建立的第5個討論版"], ["image", "group5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:27.843097"], ["updated_at", "2016-06-28 05:37:27.843097"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 5], ["user_id", 1], ["created_at", "2016-06-28 05:37:27.849205"], ["updated_at", "2016-06-28 05:37:27.849205"]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 5], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:29.511973"], ["updated_at", "2016-06-28 05:37:29.511973"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 5], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:30.797815"], ["updated_at", "2016-06-28 05:37:30.797815"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 5], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:31.850071"], ["updated_at", "2016-06-28 05:37:31.850071"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 5], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:32.692056"], ["updated_at", "2016-06-28 05:37:32.692056"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (1.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 5], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:33.679627"], ["updated_at", "2016-06-28 05:37:33.679627"]]
+  [1m[35mSQL (1.5ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 5], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:34.713565"], ["updated_at", "2016-06-28 05:37:34.713565"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 5], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:35.707495"], ["updated_at", "2016-06-28 05:37:35.707495"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+
+
+Started GET "/users/confirmation?confirmation_token=xdsuSTWrhHd4ZSRZJGZa" for 127.0.0.1 at 2016-06-28 13:37:36 +0800
+Processing by Devise::ConfirmationsController#show as HTML
+  Parameters: {"confirmation_token"=>"xdsuSTWrhHd4ZSRZJGZa"}
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+  [1m[36mUser Load (4.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."confirmation_token" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["confirmation_token", "xdsuSTWrhHd4ZSRZJGZa"]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36m (31.3ms)[0m  [1mcommit transaction[0m
+  [1m[36mSQL (242.5ms)[0m  [1mUPDATE "users" SET "confirmed_at" = ?, "updated_at" = ? WHERE "users"."id" = ?[0m  [["confirmed_at", "2016-06-28 05:37:36.533537"], ["updated_at", "2016-06-28 05:37:36.535677"], ["id", 1]]
+  [1m[35m (20.0ms)[0m  commit transaction
+Redirected to http://groupme.dev/users/sign_in
+Completed 302 Found in 324ms (ActiveRecord: 267.9ms)
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-06-28 13:37:36 +0800
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (3.0ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 5], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:36.859154"], ["updated_at", "2016-06-28 05:37:36.859154"]]
+  [1m[35mSQL (1.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+Processing by Devise::SessionsController#new as HTML
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb___816074233650701951_70211004274840 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:6)
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb___816074233650701951_70211004274840 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:7)
+  Rendered devise/shared/_links.html.erb (1.5ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (21.3ms)
+  Rendered common/_search_form.html.erb (0.6ms)
+  Rendered common/_user_nav.html.erb (1.0ms)
+  Rendered common/_menu.html.erb (21.1ms)
+  Rendered common/_footer.html.erb (0.3ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (4.7ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 272ms (Views: 268.3ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 13:37:37 +0800
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 13:37:37 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 13:37:37 +0800
+  [1m[36m (1.2ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  begin transaction
+  [1m[36mSQL (66.2ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 5], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:38.097256"], ["updated_at", "2016-06-28 05:37:38.097256"]]
+  [1m[35mSQL (0.4ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+
+
+Started GET "/apple-touch-icon-precomposed.png" for 127.0.0.1 at 2016-06-28 13:37:38 +0800
+
+ActionController::RoutingError (No route matches [GET] "/apple-touch-icon-precomposed.png"):
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.3.0) lib/web_console/middleware.rb:28:in `block in call'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `catch'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiler.rb:278:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:155:in `handle'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:109:in `rescue in block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:106:in `block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `each'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `block in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `loop'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:12:in `run'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/bin/nack_worker:4:in `<main>'
+
+
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.4ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/routes/_route.html.erb (18.0ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/routes/_table.html.erb (7.1ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (388.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_markup.html.erb (0.7ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.7ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.7ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/console.js.erb within layouts/javascript (101.1ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.6ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (1.0ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (229.1ms)
+
+
+Started GET "/apple-touch-icon.png" for 127.0.0.1 at 2016-06-28 13:37:39 +0800
+
+ActionController::RoutingError (No route matches [GET] "/apple-touch-icon.png"):
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:21:in `call'
+  web-console (2.3.0) lib/web_console/middleware.rb:28:in `block in call'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `catch'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiler.rb:278:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:155:in `handle'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:109:in `rescue in block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:106:in `block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `each'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `block in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `loop'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:12:in `run'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/bin/nack_worker:4:in `<main>'
+
+
+  [1m[36m (28.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 5], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:39.885655"], ["updated_at", "2016-06-28 05:37:39.885655"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 5]]
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (4.4ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/routes/_route.html.erb (43.5ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/routes/_table.html.erb (32.7ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (39.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/routing_error.html.erb within rescues/layout (723.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_markup.html.erb (1.0ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (1.0ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.8ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.9ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/console.js.erb within layouts/javascript (131.4ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.9ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.9ms)
+  Rendered /Users/dpanaben/.rvm/gems/ruby-2.3.1/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (277.9ms)
+  [1m[36m (1.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第6組"], ["description", "這是用種子建立的第6個討論版\n\n這是用種子建立的第6個討論版"], ["image", "group6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:41.271420"], ["updated_at", "2016-06-28 05:37:41.271420"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 6], ["user_id", 1], ["created_at", "2016-06-28 05:37:41.276606"], ["updated_at", "2016-06-28 05:37:41.276606"]]
+  [1m[36m (3.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 6], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:42.253724"], ["updated_at", "2016-06-28 05:37:42.253724"]]
+  [1m[35mSQL (0.9ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (5.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 6], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:43.621200"], ["updated_at", "2016-06-28 05:37:43.621200"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 6], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:44.658605"], ["updated_at", "2016-06-28 05:37:44.658605"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 6], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:45.947160"], ["updated_at", "2016-06-28 05:37:45.947160"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (1.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 6], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:46.953065"], ["updated_at", "2016-06-28 05:37:46.953065"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 6], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:47.926404"], ["updated_at", "2016-06-28 05:37:47.926404"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 6], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:48.921078"], ["updated_at", "2016-06-28 05:37:48.921078"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 6], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:49.921730"], ["updated_at", "2016-06-28 05:37:49.921730"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 6], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:50.947952"], ["updated_at", "2016-06-28 05:37:50.947952"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+  [1m[36m (4.0ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 6], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:52.402945"], ["updated_at", "2016-06-28 05:37:52.402945"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 6]]
+
+
+Started POST "/users/sign_in" for ::1 at 2016-06-28 13:37:52 +0800
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"E1/JVVhbdYGGDwkjkuj8hgq34miRPZM+3KkO4kLHPJl66jiKsyK3VZ81QohpF4gq2cwwn117XGN9pFyagI6Llg==", "user"=>{"email"=>"dpan.orz@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Log in"}
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["email", "dpan.orz@gmail.com"]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[36m (77.4ms)[0m  [1mcommit transaction[0m
+  [1m[35mSQL (644.4ms)[0m  UPDATE "users" SET "last_sign_in_at" = ?, "current_sign_in_at" = ?, "last_sign_in_ip" = ?, "current_sign_in_ip" = ?, "sign_in_count" = ?, "updated_at" = ? WHERE "users"."id" = ?  [["last_sign_in_at", "2016-06-28 05:37:52.874375"], ["current_sign_in_at", "2016-06-28 05:37:52.874375"], ["last_sign_in_ip", "::1"], ["current_sign_in_ip", "::1"], ["sign_in_count", 1], ["updated_at", "2016-06-28 05:37:52.877296"], ["id", 1]]
+  [1m[36m (1.0ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/groups/new
+Completed 302 Found in 911ms (ActiveRecord: 645.9ms)
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.9ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第7組"], ["description", "這是用種子建立的第7個討論版\n\n這是用種子建立的第7個討論版"], ["image", "group7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:53.593414"], ["updated_at", "2016-06-28 05:37:53.593414"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 7], ["user_id", 1], ["created_at", "2016-06-28 05:37:53.599564"], ["updated_at", "2016-06-28 05:37:53.599564"]]
+
+
+Started GET "/groups/new" for ::1 at 2016-06-28 13:37:53 +0800
+Processing by GroupsController#new as HTML
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered groups/new.html.erb within layouts/application (20.7ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (2.1ms)
+  Rendered common/_menu.html.erb (6.8ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 183ms (Views: 177.6ms | ActiveRecord: 0.4ms)
+  [1m[36m (3.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 7], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:54.717842"], ["updated_at", "2016-06-28 05:37:54.717842"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 7], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:56.217113"], ["updated_at", "2016-06-28 05:37:56.217113"]]
+  [1m[35mSQL (0.5ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 13:37:56 +0800
+Processing by GroupsController#index as HTML
+  [1m[36mGroup Load (0.3ms)[0m  [1mSELECT "groups".* FROM "groups"[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" IN (1)
+  Rendered groups/index.html.erb within layouts/application (84.4ms)
+  Rendered common/_search_form.html.erb (0.7ms)
+  Rendered common/_user_nav.html.erb (0.8ms)
+  Rendered common/_menu.html.erb (6.7ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.3ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 7], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:57.195101"], ["updated_at", "2016-06-28 05:37:57.195101"]]
+  [1m[35mSQL (0.6ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+Completed 200 OK in 257ms (Views: 240.5ms | ActiveRecord: 1.4ms)
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mSQL (3.0ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 7], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:58.147806"], ["updated_at", "2016-06-28 05:37:58.147806"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 7], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:37:59.200010"], ["updated_at", "2016-06-28 05:37:59.200010"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+
+
+Started GET "/groups/new" for ::1 at 2016-06-28 13:37:59 +0800
+Processing by GroupsController#new as HTML
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  Rendered groups/new.html.erb within layouts/application (15.8ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (2.1ms)
+  Rendered common/_menu.html.erb (9.6ms)
+  Rendered common/_footer.html.erb (0.3ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 186ms (Views: 180.9ms | ActiveRecord: 0.6ms)
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (5.0ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 7], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:00.174984"], ["updated_at", "2016-06-28 05:38:00.174984"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 7], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:01.196018"], ["updated_at", "2016-06-28 05:38:01.196018"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (4.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 7], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:02.246963"], ["updated_at", "2016-06-28 05:38:02.246963"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (1.0ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 7], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:03.302145"], ["updated_at", "2016-06-28 05:38:03.302145"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 7], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:04.309006"], ["updated_at", "2016-06-28 05:38:04.309006"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 7]]
+
+
+Started GET "/admin/posts" for ::1 at 2016-06-28 13:38:04 +0800
+Processing by Admin::PostsController#index as HTML
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mPost Load (7.4ms)[0m  [1mSELECT "posts".* FROM "posts"  ORDER BY updated_at DESC[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" IN (1)
+  [1m[36mGroup Load (0.4ms)[0m  [1mSELECT "groups".* FROM "groups" WHERE "groups"."id" IN (7, 6, 5, 4, 3, 2, 1)[0m
+  Rendered admin/posts/index.html.erb within layouts/application (537.8ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (2.7ms)
+  Rendered common/_menu.html.erb (8.1ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 751ms (Views: 699.2ms | ActiveRecord: 9.2ms)
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (3.5ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第8組"], ["description", "這是用種子建立的第8個討論版\n\n這是用種子建立的第8個討論版"], ["image", "group8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:05.484813"], ["updated_at", "2016-06-28 05:38:05.484813"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 8], ["user_id", 1], ["created_at", "2016-06-28 05:38:05.491623"], ["updated_at", "2016-06-28 05:38:05.491623"]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (1.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 8], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:07.066927"], ["updated_at", "2016-06-28 05:38:07.066927"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (3.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.2ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 8], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:08.169715"], ["updated_at", "2016-06-28 05:38:08.169715"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (1.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (5.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 8], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:09.229685"], ["updated_at", "2016-06-28 05:38:09.229685"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (4.0ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (8.9ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 8], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:10.251366"], ["updated_at", "2016-06-28 05:38:10.251366"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (1.0ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (10.0ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 8], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:11.399967"], ["updated_at", "2016-06-28 05:38:11.399967"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (4.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 8], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:12.654733"], ["updated_at", "2016-06-28 05:38:12.654733"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 8], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:13.707823"], ["updated_at", "2016-06-28 05:38:13.707823"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 8], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:14.673672"], ["updated_at", "2016-06-28 05:38:14.673672"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (3.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 8], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:15.693331"], ["updated_at", "2016-06-28 05:38:15.693331"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (3.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (6.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 8], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:16.678005"], ["updated_at", "2016-06-28 05:38:16.678005"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 8]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第9組"], ["description", "這是用種子建立的第9個討論版\n\n這是用種子建立的第9個討論版"], ["image", "group9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:18.419133"], ["updated_at", "2016-06-28 05:38:18.419133"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 9], ["user_id", 1], ["created_at", "2016-06-28 05:38:18.423282"], ["updated_at", "2016-06-28 05:38:18.423282"]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 9], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:19.559348"], ["updated_at", "2016-06-28 05:38:19.559348"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 9], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:22.417457"], ["updated_at", "2016-06-28 05:38:22.417457"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.3ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 9], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:23.478006"], ["updated_at", "2016-06-28 05:38:23.478006"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (4.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 9], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:24.366034"], ["updated_at", "2016-06-28 05:38:24.366034"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.6ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 9], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:25.318607"], ["updated_at", "2016-06-28 05:38:25.318607"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 9], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:26.265886"], ["updated_at", "2016-06-28 05:38:26.265886"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.8ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 9], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:27.263308"], ["updated_at", "2016-06-28 05:38:27.263308"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (5.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 9], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:28.722914"], ["updated_at", "2016-06-28 05:38:28.722914"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 9], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:29.933800"], ["updated_at", "2016-06-28 05:38:29.933800"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 9], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:30.982651"], ["updated_at", "2016-06-28 05:38:30.982651"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 9]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "groups" ("title", "description", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["title", "討論區第10組"], ["description", "這是用種子建立的第10個討論版\n\n這是用種子建立的第10個討論版"], ["image", "group10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:32.089137"], ["updated_at", "2016-06-28 05:38:32.089137"]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "group_users" ("group_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["group_id", 10], ["user_id", 1], ["created_at", "2016-06-28 05:38:32.093492"], ["updated_at", "2016-06-28 05:38:32.093492"]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.5ms)[0m  begin transaction
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 13:38:33 +0800
+  [1m[36mSQL (3.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 1 個描述\n\n這是用種子建立的第 1 個描述"], ["group_id", 10], ["image", "post1.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:33.258055"], ["updated_at", "2016-06-28 05:38:33.258055"]]
+  [1m[35mSQL (0.1ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+Processing by GroupsController#index as HTML
+  [1m[36mGroup Load (0.4ms)[0m  [1mSELECT "groups".* FROM "groups"[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" IN (1)
+  Rendered groups/index.html.erb within layouts/application (40.0ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (0.7ms)
+  Rendered common/_menu.html.erb (5.9ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 159ms (Views: 157.7ms | ActiveRecord: 0.6ms)
+  [1m[36m (5.7ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 2 個描述\n\n這是用種子建立的第 2 個描述"], ["group_id", 10], ["image", "post2.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:34.304724"], ["updated_at", "2016-06-28 05:38:34.304724"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (0.9ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 3 個描述\n\n這是用種子建立的第 3 個描述"], ["group_id", 10], ["image", "post3.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:35.317063"], ["updated_at", "2016-06-28 05:38:35.317063"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 4 個描述\n\n這是用種子建立的第 4 個描述"], ["group_id", 10], ["image", "post4.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:36.165903"], ["updated_at", "2016-06-28 05:38:36.165903"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2016-06-28 13:38:36 +0800
+Processing by Devise::SessionsController#new as HTML
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb___816074233650701951_70211004274840 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:6)
+DEPRECATION WARNING: `#column_for_attribute` will return a null object for non-existent columns in Rails 5. Use `#has_attribute?` if you need to check for an attribute's existence. (called from block in _app_views_devise_sessions_new_html_erb___816074233650701951_70211004274840 at /Users/dpanaben/projectRoR/groupme/app/views/devise/sessions/new.html.erb:7)
+  Rendered devise/shared/_links.html.erb (1.0ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (15.7ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (0.8ms)
+  Rendered common/_menu.html.erb (5.8ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 131ms (Views: 129.2ms | ActiveRecord: 0.0ms)
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (4.4ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 5 個描述\n\n這是用種子建立的第 5 個描述"], ["group_id", 10], ["image", "post5.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:37.259752"], ["updated_at", "2016-06-28 05:38:37.259752"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.5ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 6 個描述\n\n這是用種子建立的第 6 個描述"], ["group_id", 10], ["image", "post6.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:38.693624"], ["updated_at", "2016-06-28 05:38:38.693624"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 7 個描述\n\n這是用種子建立的第 7 個描述"], ["group_id", 10], ["image", "post7.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:39.689196"], ["updated_at", "2016-06-28 05:38:39.689196"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 8 個描述\n\n這是用種子建立的第 8 個描述"], ["group_id", 10], ["image", "post8.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:40.661807"], ["updated_at", "2016-06-28 05:38:40.661807"]]
+  [1m[35mSQL (0.3ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 9 個描述\n\n這是用種子建立的第 9 個描述"], ["group_id", 10], ["image", "post9.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:41.848068"], ["updated_at", "2016-06-28 05:38:41.848068"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.3ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "posts" ("content", "group_id", "image", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["content", "這是用種子建立的第 10 個描述\n\n這是用種子建立的第 10 個描述"], ["group_id", 10], ["image", "post10.jpg"], ["user_id", 1], ["created_at", "2016-06-28 05:38:42.885041"], ["updated_at", "2016-06-28 05:38:42.885041"]]
+  [1m[35mSQL (0.2ms)[0m  UPDATE "groups" SET "posts_count" = COALESCE("posts_count", 0) + 1 WHERE "groups"."id" = ?  [["id", 10]]
+  [1m[36m (3.4ms)[0m  [1mcommit transaction[0m
+
+
+Started POST "/users/sign_in" for 127.0.0.1 at 2016-06-28 13:38:50 +0800
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"OZMxQwv/rJIaL9bg+iwTrN5Av7lnoYSkZeifRLLbbcnkRI07qc6c+4VkjaeLJcdx2XRkgEFTrI9PhW9qXQw3Jw==", "user"=>{"email"=>"dpan.orz@gmail.com", "password"=>"[FILTERED]", "remember_me"=>"1"}, "commit"=>"Log in"}
+DEPRECATION WARNING: [Devise] Changing the sanitized parameters through "Devise::ParameterSanitizer#for(sign_up) is deprecated and it will be removed from Devise 4.2.
+Please use the `permit` method:
+
+  devise_parameter_sanitizer.permit(:sign_up) do |user|
+    # Your block here.
+  end
+ (called from configure_permitted_parameters at /Users/dpanaben/projectRoR/groupme/app/controllers/application_controller.rb:34)
+  [1m[36mUser Load (0.4ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["email", "dpan.orz@gmail.com"]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.5ms)[0m  [1mUPDATE "users" SET "remember_created_at" = ?, "updated_at" = ? WHERE "users"."id" = ?[0m  [["remember_created_at", "2016-06-28 05:38:50.734653"], ["updated_at", "2016-06-28 05:38:50.736498"], ["id", 1]]
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "users" SET "current_sign_in_at" = ?, "current_sign_in_ip" = ?, "sign_in_count" = ?, "updated_at" = ? WHERE "users"."id" = ?  [["current_sign_in_at", "2016-06-28 05:38:50.746326"], ["current_sign_in_ip", "127.0.0.1"], ["sign_in_count", 2], ["updated_at", "2016-06-28 05:38:50.748416"], ["id", 1]]
+  [1m[36m (0.7ms)[0m  [1mcommit transaction[0m
+Redirected to http://groupme.dev/
+Completed 302 Found in 262ms (ActiveRecord: 3.2ms)
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 13:38:50 +0800
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.3ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered groups/index.html.erb within layouts/application (61.2ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (2.6ms)
+  Rendered common/_menu.html.erb (7.2ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 203ms (Views: 201.4ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/admin/posts" for 127.0.0.1 at 2016-06-28 13:38:57 +0800
+Processing by Admin::PostsController#index as HTML
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mPost Load (0.9ms)[0m  SELECT "posts".* FROM "posts"  ORDER BY updated_at DESC
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  [1m[35mGroup Load (0.8ms)[0m  SELECT "groups".* FROM "groups" WHERE "groups"."id" IN (10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+  Rendered admin/posts/index.html.erb within layouts/application (684.7ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.6ms)
+  Rendered common/_menu.html.erb (6.1ms)
+  Rendered common/_footer.html.erb (0.6ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 823ms (Views: 815.3ms | ActiveRecord: 2.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 13:40:07 +0800
+Processing by GroupsController#index as HTML
+  [1m[36mGroup Load (0.3ms)[0m  [1mSELECT "groups".* FROM "groups"[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" IN (1)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  Rendered groups/index.html.erb within layouts/application (68.1ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.2ms)
+  Rendered common/_menu.html.erb (5.5ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 188ms (Views: 185.1ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 13:52:27 +0800
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.3ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered groups/index.html.erb within layouts/application (71.1ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (1.8ms)
+  Rendered common/_menu.html.erb (7.6ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 205ms (Views: 203.4ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/groups/1/edit" for 127.0.0.1 at 2016-06-28 13:52:34 +0800
+Processing by GroupsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.2ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  Rendered groups/edit.html.erb within layouts/application (65.4ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.2ms)
+  Rendered common/_menu.html.erb (5.2ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 192ms (Views: 179.2ms | ActiveRecord: 0.4ms)
+
+
+Started PATCH "/groups/1" for 127.0.0.1 at 2016-06-28 13:52:44 +0800
+Processing by GroupsController#update as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"NltL9Emmk06rwrJs+KyX9Mdrq0R1jnP58Ql8dnigv6lK1F+7yw/dMPkB8pFHQgO/OMd2ehod8Q7MHoSPyquh1w==", "group"=>{"title"=>"討論區第1組", "description"=>"這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版", "image"=>#<ActionDispatch::Http::UploadedFile:0x007fb6931fa2d8 @tempfile=#<Tempfile:/var/folders/5p/x621l0q56wndvd8xhhf0lggh0000gn/T/RackMultipart20160628-14882-anust3.jpg>, @original_filename="IMG_1119.jpg", @content_type="image/jpeg", @headers="Content-Disposition: form-data; name=\"group[image]\"; filename=\"IMG_1119.jpg\"\r\nContent-Type: image/jpeg\r\n">}, "commit"=>"Submit", "id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.1ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mGroup Load (0.2ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mSQL (0.9ms)[0m  [1mUPDATE "groups" SET "description" = ?, "image" = ?, "updated_at" = ? WHERE "groups"."id" = ?[0m  [["description", "這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版"], ["image", "IMG_1119.jpg"], ["updated_at", "2016-06-28 05:52:44.451728"], ["id", 1]]
+  [1m[35m (2.9ms)[0m  rollback transaction
+Completed 500 Internal Server Error in 5397ms (ActiveRecord: 4.4ms)
+
+Excon::Errors::Forbidden - Expected(200) <=> Actual(403 Forbidden)
+excon.error.response
+  :body          => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>InvalidAccessKeyId</Code><Message>The AWS Access Key Id you provided does not exist in our records.</Message><AWSAccessKeyId>AKIAJ57N4ZYFNJ4UG6MQ</AWSAccessKeyId><RequestId>C1A38483EA0DDD95</RequestId><HostId>QwVhBJOg1GsidqUtJqXUNmcO4/9GPxpavoslu5Jy45AjHMIGowNMiK3rbKYsRZPVPovhC5JzuZc=</HostId></Error>"
+  :cookies       => [
+  ]
+  :headers       => {
+    "Connection"       => "close"
+    "Content-Type"     => "application/xml"
+    "Date"             => "Tue, 28 Jun 2016 05:52:48 GMT"
+    "Server"           => "AmazonS3"
+    "x-amz-id-2"       => "QwVhBJOg1GsidqUtJqXUNmcO4/9GPxpavoslu5Jy45AjHMIGowNMiK3rbKYsRZPVPovhC5JzuZc="
+    "x-amz-request-id" => "C1A38483EA0DDD95"
+  }
+  :host          => "groupmeforum.s3-ap-northeast-1.amazonaws.com"
+  :local_address => "10.33.0.111"
+  :local_port    => 52348
+  :path          => "/uploads/development/group/image/1/IMG_1119.jpg"
+  :port          => 443
+  :reason_phrase => "Forbidden"
+  :remote_ip     => "54.231.224.25"
+  :status        => 403
+  :status_line   => "HTTP/1.1 403 Forbidden\r\n"
+:
+  excon (0.49.0) lib/excon/middlewares/expects.rb:6:in `response_call'
+  excon (0.49.0) lib/excon/middlewares/response_parser.rb:8:in `response_call'
+  excon (0.49.0) lib/excon/connection.rb:389:in `response'
+  excon (0.49.0) lib/excon/connection.rb:253:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  fog-core (1.40.0) lib/fog/core/connection.rb:81:in `request'
+  fog-xml (0.1.2) lib/fog/xml/connection.rb:9:in `request'
+  fog-aws (0.9.2) lib/fog/aws/storage.rb:611:in `_request'
+  fog-aws (0.9.2) lib/fog/aws/storage.rb:606:in `request'
+  fog-aws (0.9.2) lib/fog/aws/requests/storage/put_object.rb:47:in `put_object'
+  fog-aws (0.9.2) lib/fog/aws/models/storage/file.rb:212:in `save'
+  fog-core (1.40.0) lib/fog/core/collection.rb:51:in `create'
+  carrierwave (0.11.2) lib/carrierwave/storage/fog.rb:259:in `store'
+  carrierwave (0.11.2) lib/carrierwave/storage/fog.rb:78:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/uploader/store.rb:59:in `block in store!'
+  carrierwave (0.11.2) lib/carrierwave/uploader/callbacks.rb:17:in `with_callbacks'
+  carrierwave (0.11.2) lib/carrierwave/uploader/store.rb:58:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/mount.rb:375:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/mount.rb:207:in `store_image!'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:432:in `block in make_lambda'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:228:in `block in halting_and_conditional'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:506:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:506:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_save_callbacks'
+  activerecord (4.2.6) lib/active_record/callbacks.rb:302:in `create_or_update'
+  activerecord (4.2.6) lib/active_record/persistence.rb:120:in `save'
+  bullet (5.1.0) lib/bullet/active_record42.rb:27:in `save_with_bullet'
+  activerecord (4.2.6) lib/active_record/validations.rb:37:in `save'
+  activerecord (4.2.6) lib/active_record/attribute_methods/dirty.rb:21:in `save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:286:in `block (2 levels) in save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:351:in `block in with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:211:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:220:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:348:in `with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/transactions.rb:286:in `block in save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:301:in `rollback_active_record_state!'
+  activerecord (4.2.6) lib/active_record/transactions.rb:285:in `save'
+  activerecord (4.2.6) lib/active_record/persistence.rb:252:in `block in update'
+  activerecord (4.2.6) lib/active_record/transactions.rb:351:in `block in with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:213:in `block in transaction'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/transaction.rb:184:in `within_new_transaction'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:213:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:220:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:348:in `with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/persistence.rb:250:in `update'
+  app/controllers/groups_controller.rb:55:in `block in update'
+  actionpack (4.2.6) lib/action_controller/metal/mime_responds.rb:212:in `respond_to'
+  app/controllers/groups_controller.rb:54:in `update'
+  actionpack (4.2.6) lib/action_controller/metal/implicit_render.rb:4:in `send_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:198:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rendering.rb:10:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:20:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:117:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:555:in `block (2 levels) in compile'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:505:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_process_action_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:32:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.6) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.6) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.6) lib/action_view/rendering.rb:30:in `process'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiling_methods.rb:102:in `block in profile_method'
+  actionpack (4.2.6) lib/action_controller/metal.rb:196:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal.rb:237:in `block in action'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:74:in `dispatch'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:43:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:817:in `call'
+  omniauth (1.3.1) lib/omniauth/strategy.rb:186:in `call!'
+  omniauth (1.3.1) lib/omniauth/strategy.rb:164:in `call'
+  bullet (5.1.0) lib/bullet/rack.rb:12:in `call'
+  warden (1.2.6) lib/warden/manager.rb:35:in `block in call'
+  warden (1.2.6) lib/warden/manager.rb:34:in `call'
+  rack (1.6.4) lib/rack/etag.rb:24:in `call'
+  rack (1.6.4) lib/rack/conditionalget.rb:38:in `call'
+  rack (1.6.4) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.6) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/connection_pool.rb:653:in `call'
+  activerecord (4.2.6) lib/active_record/migration.rb:377:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:88:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_call_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  airbrake (5.4.0) lib/airbrake/rack/middleware.rb:22:in `call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:84:in `protected_app_call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:79:in `better_errors_call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:56:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  web-console (2.3.0) lib/web_console/middleware.rb:28:in `block in call'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiler.rb:278:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:155:in `handle'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:109:in `rescue in block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:106:in `block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `block in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:12:in `run'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/bin/nack_worker:4:in `<main>'
+
+
+
+Started POST "/__better_errors/70211038740960/variables" for 127.0.0.1 at 2016-06-28 13:52:50 +0800
+
+
+Started GET "/groups/1/edit" for 127.0.0.1 at 2016-06-28 13:52:54 +0800
+Processing by GroupsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.2ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  Rendered groups/edit.html.erb within layouts/application (9.5ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.6ms)
+  Rendered common/_menu.html.erb (6.8ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.2ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 142ms (Views: 136.0ms | ActiveRecord: 0.4ms)
+
+
+Started PATCH "/groups/1" for 127.0.0.1 at 2016-06-28 13:55:50 +0800
+Processing by GroupsController#update as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"CgR8a1n8GXJ4Urgh4QhKpWuwLuVenpMDpXpqugwJHp52i2gk21VXDCqR+Nxe5t7ulBzz2zENEfSYbZJDvgIA4A==", "group"=>{"title"=>"討論區第1組", "description"=>"這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版", "image"=>#<ActionDispatch::Http::UploadedFile:0x007fb692e1ad98 @tempfile=#<Tempfile:/var/folders/5p/x621l0q56wndvd8xhhf0lggh0000gn/T/RackMultipart20160628-14882-udahiq.jpg>, @original_filename="IMG_1119.jpg", @content_type="image/jpeg", @headers="Content-Disposition: form-data; name=\"group[image]\"; filename=\"IMG_1119.jpg\"\r\nContent-Type: image/jpeg\r\n">}, "commit"=>"Submit", "id"=>"1"}
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.2ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mGroup Load (0.9ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mSQL (0.4ms)[0m  [1mUPDATE "groups" SET "description" = ?, "image" = ?, "updated_at" = ? WHERE "groups"."id" = ?[0m  [["description", "這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版"], ["image", "IMG_1119.jpg"], ["updated_at", "2016-06-28 05:55:50.701375"], ["id", 1]]
+  [1m[35m (3.0ms)[0m  rollback transaction
+Completed 500 Internal Server Error in 4581ms (ActiveRecord: 4.8ms)
+
+Excon::Errors::Forbidden - Expected(200) <=> Actual(403 Forbidden)
+excon.error.response
+  :body          => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Error><Code>InvalidAccessKeyId</Code><Message>The AWS Access Key Id you provided does not exist in our records.</Message><AWSAccessKeyId>AKIAJ57N4ZYFNJ4UG6MQ</AWSAccessKeyId><RequestId>16CE28D0DB6252DC</RequestId><HostId>BOXFrgQjWZQjg+pLpJCp1JqdiJ4mKGtgcCiIJa0MrdQWEsDRtakeE13v8Y84CyLWoeMqudcVBRk=</HostId></Error>"
+  :cookies       => [
+  ]
+  :headers       => {
+    "Connection"       => "close"
+    "Content-Type"     => "application/xml"
+    "Date"             => "Tue, 28 Jun 2016 05:55:53 GMT"
+    "Server"           => "AmazonS3"
+    "x-amz-id-2"       => "BOXFrgQjWZQjg+pLpJCp1JqdiJ4mKGtgcCiIJa0MrdQWEsDRtakeE13v8Y84CyLWoeMqudcVBRk="
+    "x-amz-request-id" => "16CE28D0DB6252DC"
+  }
+  :host          => "groupmeforum.s3-ap-northeast-1.amazonaws.com"
+  :local_address => "10.33.0.111"
+  :local_port    => 52422
+  :path          => "/uploads/development/group/image/1/IMG_1119.jpg"
+  :port          => 443
+  :reason_phrase => "Forbidden"
+  :remote_ip     => "54.231.226.41"
+  :status        => 403
+  :status_line   => "HTTP/1.1 403 Forbidden\r\n"
+:
+  excon (0.49.0) lib/excon/middlewares/expects.rb:6:in `response_call'
+  excon (0.49.0) lib/excon/middlewares/response_parser.rb:8:in `response_call'
+  excon (0.49.0) lib/excon/connection.rb:389:in `response'
+  excon (0.49.0) lib/excon/connection.rb:253:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  excon (0.49.0) lib/excon/middlewares/idempotent.rb:26:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/middlewares/base.rb:10:in `error_call'
+  excon (0.49.0) lib/excon/connection.rb:273:in `rescue in request'
+  excon (0.49.0) lib/excon/connection.rb:221:in `request'
+  fog-core (1.40.0) lib/fog/core/connection.rb:81:in `request'
+  fog-xml (0.1.2) lib/fog/xml/connection.rb:9:in `request'
+  fog-aws (0.9.2) lib/fog/aws/storage.rb:611:in `_request'
+  fog-aws (0.9.2) lib/fog/aws/storage.rb:606:in `request'
+  fog-aws (0.9.2) lib/fog/aws/requests/storage/put_object.rb:47:in `put_object'
+  fog-aws (0.9.2) lib/fog/aws/models/storage/file.rb:212:in `save'
+  fog-core (1.40.0) lib/fog/core/collection.rb:51:in `create'
+  carrierwave (0.11.2) lib/carrierwave/storage/fog.rb:259:in `store'
+  carrierwave (0.11.2) lib/carrierwave/storage/fog.rb:78:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/uploader/store.rb:59:in `block in store!'
+  carrierwave (0.11.2) lib/carrierwave/uploader/callbacks.rb:17:in `with_callbacks'
+  carrierwave (0.11.2) lib/carrierwave/uploader/store.rb:58:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/mount.rb:375:in `store!'
+  carrierwave (0.11.2) lib/carrierwave/mount.rb:207:in `store_image!'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:432:in `block in make_lambda'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:228:in `block in halting_and_conditional'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:506:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:506:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_save_callbacks'
+  activerecord (4.2.6) lib/active_record/callbacks.rb:302:in `create_or_update'
+  activerecord (4.2.6) lib/active_record/persistence.rb:120:in `save'
+  bullet (5.1.0) lib/bullet/active_record42.rb:27:in `save_with_bullet'
+  activerecord (4.2.6) lib/active_record/validations.rb:37:in `save'
+  activerecord (4.2.6) lib/active_record/attribute_methods/dirty.rb:21:in `save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:286:in `block (2 levels) in save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:351:in `block in with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:211:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:220:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:348:in `with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/transactions.rb:286:in `block in save'
+  activerecord (4.2.6) lib/active_record/transactions.rb:301:in `rollback_active_record_state!'
+  activerecord (4.2.6) lib/active_record/transactions.rb:285:in `save'
+  activerecord (4.2.6) lib/active_record/persistence.rb:252:in `block in update'
+  activerecord (4.2.6) lib/active_record/transactions.rb:351:in `block in with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:213:in `block in transaction'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/transaction.rb:184:in `within_new_transaction'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/database_statements.rb:213:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:220:in `transaction'
+  activerecord (4.2.6) lib/active_record/transactions.rb:348:in `with_transaction_returning_status'
+  activerecord (4.2.6) lib/active_record/persistence.rb:250:in `update'
+  app/controllers/groups_controller.rb:55:in `block in update'
+  actionpack (4.2.6) lib/action_controller/metal/mime_responds.rb:212:in `respond_to'
+  app/controllers/groups_controller.rb:54:in `update'
+  actionpack (4.2.6) lib/action_controller/metal/implicit_render.rb:4:in `send_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:198:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rendering.rb:10:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:20:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:117:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:555:in `block (2 levels) in compile'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:505:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_process_action_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:32:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.6) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.6) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.6) lib/action_view/rendering.rb:30:in `process'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiling_methods.rb:102:in `block in profile_method'
+  actionpack (4.2.6) lib/action_controller/metal.rb:196:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal.rb:237:in `block in action'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:74:in `dispatch'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:43:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:817:in `call'
+  omniauth (1.3.1) lib/omniauth/strategy.rb:186:in `call!'
+  omniauth (1.3.1) lib/omniauth/strategy.rb:164:in `call'
+  bullet (5.1.0) lib/bullet/rack.rb:12:in `call'
+  warden (1.2.6) lib/warden/manager.rb:35:in `block in call'
+  warden (1.2.6) lib/warden/manager.rb:34:in `call'
+  rack (1.6.4) lib/rack/etag.rb:24:in `call'
+  rack (1.6.4) lib/rack/conditionalget.rb:38:in `call'
+  rack (1.6.4) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.6) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/connection_pool.rb:653:in `call'
+  activerecord (4.2.6) lib/active_record/migration.rb:377:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:88:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_call_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  airbrake (5.4.0) lib/airbrake/rack/middleware.rb:22:in `call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:84:in `protected_app_call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:79:in `better_errors_call'
+  better_errors (0.9.0) lib/better_errors/middleware.rb:56:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  web-console (2.3.0) lib/web_console/middleware.rb:28:in `block in call'
+  web-console (2.3.0) lib/web_console/middleware.rb:18:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  rack-mini-profiler (0.10.1) lib/mini_profiler/profiler.rb:278:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:155:in `handle'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:109:in `rescue in block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:106:in `block (2 levels) in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:96:in `block in start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:76:in `start'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/lib/nack/server.rb:12:in `run'
+  /Users/dpanaben/Library/Application Support/Pow/Versions/0.5.0/node_modules/nack/bin/nack_worker:4:in `<main>'
+
+
+
+Started POST "/__better_errors/70211034817420/variables" for 127.0.0.1 at 2016-06-28 13:55:55 +0800
+
+
+Started GET "/groups/1/edit" for 127.0.0.1 at 2016-06-28 14:02:23 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by GroupsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mGroup Load (0.2ms)[0m  [1mSELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1[0m  [["user_id", 1], ["id", 1]]
+  Rendered groups/edit.html.erb within layouts/application (143.2ms)
+  Rendered common/_search_form.html.erb (1.0ms)
+  Rendered common/_user_nav.html.erb (2.8ms)
+  Rendered common/_menu.html.erb (10.4ms)
+  Rendered common/_footer.html.erb (0.8ms)
+  Rendered common/_bootstrap_modal.html.erb (0.4ms)
+  Rendered common/_facebook_js.erb (0.5ms)
+  Rendered common/_google_analytics.html.erb (0.6ms)
+Completed 200 OK in 488ms (Views: 378.9ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/assets/application-b6aec2ccac3176834d3786df3a5ce6c6.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:24 +0800
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:25 +0800
+
+
+Started GET "/assets/application-d6fc28ee9bad74d03315bda0e6fc7b7c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:25 +0800
+
+
+Started GET "/assets/jquery_ujs-0b858551b498c1d6a8760538ec59b044.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:25 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:25 +0800
+
+
+Started GET "/assets/font-awesome-7ca9e7bbd90fe795545d1cdf51f814e8.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:32 +0800
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:32 +0800
+
+
+Started GET "/assets/twitter/bootstrap/alert-fdaa8149a94cea54455049dc8246e265.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:32 +0800
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 14:02:34 +0800
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.3ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  [1m[35mUser Load (0.4ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered groups/index.html.erb within layouts/application (166.7ms)
+  Rendered common/_search_form.html.erb (0.8ms)
+  Rendered common/_user_nav.html.erb (2.2ms)
+  Rendered common/_menu.html.erb (9.6ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 382ms (Views: 379.6ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/application-d6fc28ee9bad74d03315bda0e6fc7b7c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/application-b6aec2ccac3176834d3786df3a5ce6c6.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/jquery_ujs-0b858551b498c1d6a8760538ec59b044.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/font-awesome-7ca9e7bbd90fe795545d1cdf51f814e8.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/assets/twitter/bootstrap/alert-fdaa8149a94cea54455049dc8246e265.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:35 +0800
+
+
+Started GET "/groups/1/edit" for 127.0.0.1 at 2016-06-28 14:02:38 +0800
+Processing by GroupsController#edit as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.1ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  Rendered groups/edit.html.erb within layouts/application (9.6ms)
+  Rendered common/_search_form.html.erb (0.2ms)
+  Rendered common/_user_nav.html.erb (1.3ms)
+  Rendered common/_menu.html.erb (6.2ms)
+  Rendered common/_footer.html.erb (0.1ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.2ms)
+Completed 200 OK in 140ms (Views: 133.9ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/assets/application-b6aec2ccac3176834d3786df3a5ce6c6.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/font-awesome-7ca9e7bbd90fe795545d1cdf51f814e8.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/application-d6fc28ee9bad74d03315bda0e6fc7b7c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/jquery_ujs-0b858551b498c1d6a8760538ec59b044.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started GET "/assets/twitter/bootstrap/alert-fdaa8149a94cea54455049dc8246e265.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:39 +0800
+
+
+Started PATCH "/groups/1" for 127.0.0.1 at 2016-06-28 14:02:50 +0800
+Processing by GroupsController#update as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"/v1ySMeAY/Sf5AtCt3h3p1t9T+KIOyb7VPh3hcX39TyCcmYHRSktis0nS78IluPspNGS3OeopAxp7498d/zrQg==", "group"=>{"title"=>"討論區第1組", "description"=>"這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版", "image"=>#<ActionDispatch::Http::UploadedFile:0x007fd6953f37c0 @tempfile=#<Tempfile:/var/folders/5p/x621l0q56wndvd8xhhf0lggh0000gn/T/RackMultipart20160628-15224-3b8keb.jpg>, @original_filename="IMG_1119.jpg", @content_type="image/jpeg", @headers="Content-Disposition: form-data; name=\"group[image]\"; filename=\"IMG_1119.jpg\"\r\nContent-Type: image/jpeg\r\n">}, "commit"=>"Submit", "id"=>"1"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mGroup Load (0.1ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."user_id" = ? AND "groups"."id" = ? LIMIT 1  [["user_id", 1], ["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mGroup Load (0.2ms)[0m  SELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mSQL (0.6ms)[0m  [1mUPDATE "groups" SET "description" = ?, "image" = ?, "updated_at" = ? WHERE "groups"."id" = ?[0m  [["description", "這是用種子建立的第1個討論版\r\n\r\n這是用種子建立的第1個討論版"], ["image", "IMG_1119.jpg"], ["updated_at", "2016-06-28 06:02:51.257377"], ["id", 1]]
+  [1m[35m (3.3ms)[0m  commit transaction
+Redirected to http://groupme.dev/groups/1
+Completed 302 Found in 2522ms (ActiveRecord: 4.6ms)
+
+
+Started GET "/groups/1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+Processing by GroupsController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mGroup Load (0.2ms)[0m  [1mSELECT  "groups".* FROM "groups" WHERE "groups"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mGroup Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "groups" INNER JOIN "group_users" ON "groups"."id" = "group_users"."group_id" WHERE "group_users"."user_id" = ? AND "groups"."id" = ? LIMIT 1[0m  [["user_id", 1], ["id", 1]]
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  1 AS one FROM "groups" INNER JOIN "group_users" ON "groups"."id" = "group_users"."group_id" WHERE "group_users"."user_id" = ? AND "groups"."id" = ? LIMIT 1[0m  [["user_id", 1], ["id", 1]]
+  [1m[35mPost Load (0.4ms)[0m  SELECT "posts".* FROM "posts" WHERE "posts"."group_id" = ?  [["group_id", 1]]
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  Rendered groups/show.html.erb within layouts/application (99.6ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (1.1ms)
+  Rendered common/_menu.html.erb (6.5ms)
+  Rendered common/_footer.html.erb (0.1ms)
+  Rendered common/_bootstrap_modal.html.erb (0.1ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 198ms (Views: 193.0ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/assets/application-b6aec2ccac3176834d3786df3a5ce6c6.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/font-awesome-7ca9e7bbd90fe795545d1cdf51f814e8.css?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/application-d6fc28ee9bad74d03315bda0e6fc7b7c.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/twitter/bootstrap/alert-fdaa8149a94cea54455049dc8246e265.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/jquery_ujs-0b858551b498c1d6a8760538ec59b044.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:53 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 14:02:54 +0800
+
+
+Started GET "/" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+Processing by GroupsController#index as HTML
+  [1m[35mGroup Load (0.2ms)[0m  SELECT "groups".* FROM "groups"
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1)[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ?  ORDER BY "users"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered groups/index.html.erb within layouts/application (47.1ms)
+  Rendered common/_search_form.html.erb (0.3ms)
+  Rendered common/_user_nav.html.erb (2.2ms)
+  Rendered common/_menu.html.erb (7.4ms)
+  Rendered common/_footer.html.erb (0.2ms)
+  Rendered common/_bootstrap_modal.html.erb (0.2ms)
+  Rendered common/_facebook_js.erb (0.1ms)
+  Rendered common/_google_analytics.html.erb (0.1ms)
+Completed 200 OK in 171ms (Views: 169.3ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/assets/application-b6aec2ccac3176834d3786df3a5ce6c6.css?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/common-f08617926cec2580a8618bde405edf11.css?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/application-d6fc28ee9bad74d03315bda0e6fc7b7c.js?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/font-awesome-7ca9e7bbd90fe795545d1cdf51f814e8.css?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/jquery-fec3d297f67a88e5f7a1357ea79f700c.js?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/twitter/bootstrap/alert-fdaa8149a94cea54455049dc8246e265.js?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/jquery_ujs-0b858551b498c1d6a8760538ec59b044.js?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
+
+
+Started GET "/assets/twitter/bootstrap/dropdown-37940228795e163b205eaac093f8a6a8.js?body=1" for 127.0.0.1 at 2016-06-28 14:03:00 +0800
